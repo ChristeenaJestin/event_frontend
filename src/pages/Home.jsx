@@ -4,7 +4,6 @@ import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
 import Footer from '../components/layout/Footer';
 
-// Hardcoded fallback data to keep your design beautiful no matter what
 const defaultTrending = [
   { gradient: 'linear-gradient(135deg,#4F46E5,#818CF8)', tag: 'SEP 18–20 · TECH FEST', title: 'HackNight 2026', meta: 'CS Auditorium · 600 going' },
   { gradient: 'linear-gradient(135deg,#FF6B4A,#FFB199)', tag: 'OCT 02 · WORKSHOP', title: 'Intro to UI Design', meta: 'Seminar Hall 2 · 120 going' },
@@ -14,11 +13,9 @@ const defaultTrending = [
 function Home() {
   const navigate = useNavigate();
   
-  // State variables for dynamic data injection
   const [events, setEvents] = useState([]);
   const [eventCountLabel, setEventCountLabel] = useState('340+');
 
-  // Format timestamps neatly inside the grid (e.g., "OCT 14")
   const formatEventDate = (dateString) => {
     if (!dateString) return 'TBD';
     const d = new Date(dateString);
@@ -35,17 +32,15 @@ function Home() {
           setEventCountLabel(`${result.data.length}`);
         }
       } catch (error) {
-        console.error("Database fetch failed or was blocked by mixed content browser rules. Keeping design layouts active.", error);
+        console.error("Database fetch failed or was blocked by mixed content browser rules.", error);
       }
     };
     fetchEvents();
   }, []);
 
-  // Determine dynamic objects or fall back to your native layout values cleanly
   const heroEvent1 = events[0];
   const heroEvent2 = events[1];
 
-  // Map dynamic cards into trending row. If database is empty/blocked, display default grid cards
   const dynamicTrendingList = events.length > 0 
     ? events.slice(0, 3).map((event, index) => ({
         gradient: event.banner_url ? `url(${event.banner_url}) center/cover no-repeat` : defaultTrending[index % 3].gradient,
@@ -62,12 +57,12 @@ function Home() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 21, color: 'var(--ink)', cursor: 'pointer' }} onClick={() => navigate('/')}>
           <span style={{ width: 10, height: 10, borderRadius: '50%', background: 'var(--coral)' }} />EventHub
         </div>
+        
+        {/* Cleaned Navigation Layout - Kept only Explore Events */}
         <nav style={{ display: 'flex', gap: 32, fontSize: 14, color: 'var(--slate)', fontWeight: 500 }}>
           <a style={{ cursor: 'pointer' }} onClick={() => navigate('/events')}>Explore events</a>
-          <a style={{ cursor: 'pointer' }} onClick={() => navigate('/clubs')}>Clubs and societies</a>
-          <a style={{ cursor: 'pointer' }} onClick={() => navigate('/calendar')}>Calendar</a>
-          <a style={{ cursor: 'pointer' }} onClick={() => navigate('/about')}>About</a>
         </nav>
+        
         <div style={{ display: 'flex', gap: 12 }}>
           <Button variant="ghost" onClick={() => navigate('/login')}>Log in</Button>
           <Button onClick={() => navigate('/register')}>Sign up</Button>
@@ -83,10 +78,12 @@ function Home() {
             Discover fests, workshops, hackathons and guest lectures hosted by every club and
             department — RSVP in a tap, or grab a ticket when there's one.
           </p>
+          
+          {/* Action Row - Cleaned up Organizer link button */}
           <div style={{ display: 'flex', gap: 14, marginTop: 30 }}>
             <Button onClick={() => navigate('/events')}>Browse events</Button>
-            <Button variant="secondary">I'm an organizer</Button>
           </div>
+          
           <div style={{ display: 'flex', gap: 40, marginTop: 48 }}>
             {[[eventCountLabel, 'events this semester'], ['86', 'active clubs'], ['12,800', 'students using EventHub']].map(([num, label]) => (
               <div key={label}>
@@ -97,7 +94,7 @@ function Home() {
           </div>
         </div>
 
-        {/* HERO CARDS COMPONENT BLOCK */}
+        {/* HERO CARDS BLOCK */}
         <div style={{ position: 'relative', height: 400 }}>
           {/* Box 1 */}
           <div style={{ position: 'absolute', top: 0, right: 30, width: 300, background: 'var(--surface)', border: '1px solid var(--hairline)', borderRadius: 16, padding: 24, boxShadow: '0 12px 30px rgba(22,24,43,0.06)' }}>
@@ -133,7 +130,7 @@ function Home() {
         </div>
       </section>
 
-      {/* TRENDING GRID ROW SECTION */}
+      {/* TRENDING GRID SECTION */}
       <section style={{ padding: 64, borderBottom: '1px solid var(--hairline)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 30 }}>
           <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 23, color: 'var(--ink)' }}>Trending this week</h2>
