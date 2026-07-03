@@ -16,4 +16,4 @@ export const logout = () =>
 
 // GET /api/users/profile  (used to validate token on app load)
 export const getCurrentUser = () =>
-  axiosInstance.get('/users/profile').then((r) => r.data);
+  axiosInstance.get('/users/profile').then((r) => r.data.data);

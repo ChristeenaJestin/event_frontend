@@ -1,9 +1,17 @@
-import axiosInstance from '../services/axiosInstance';
+import axiosInstance from "../services/axiosInstance";
 
-// GET /api/users/profile
-export const getProfile = () =>
-  axiosInstance.get('/users/profile').then((r) => r.data);
+export const getProfile = async()=>{
 
-// PUT /api/users/profile  body: { name, profile_image }
-export const updateProfile = (payload) =>
-  axiosInstance.put('/users/profile', payload).then((r) => r.data);
+const res=await axiosInstance.get("/users/profile");
+
+return res.data.data;
+
+}
+
+export const updateProfile=async(payload)=>{
+
+const res=await axiosInstance.put("/users/profile",payload);
+
+return res.data.data;
+
+}

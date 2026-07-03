@@ -10,7 +10,7 @@ import useAuth from '../hooks/useAuth';
 import { ORGANIZER_ROLES } from '../utils/constants';
 import { normalizeEvent, formatDate } from '../utils/helpers';
 
-const TABS = ['Overview', 'Schedule', 'Speakers', 'Sponsors'];
+const TABS = ['Overview'];
 
 function EventDetails() {
   const navigate    = useNavigate();
@@ -24,14 +24,30 @@ function EventDetails() {
   const [rsvping, setRsvping] = useState(false);
 
   const load = async () => {
-    setLoading(true); setError(null);
+
     try {
-      // GET /api/events/:id
-      const raw = await eventApi.getEventById(id);
-      setEvent(normalizeEvent(raw));
-    } catch (err) { setError(err); }
-    finally { setLoading(false); }
-  };
+
+        setLoading(true);
+
+        const data = await eventApi.getEventById(id);
+
+        setEvent(normalizeEvent(data));
+
+    }
+
+    catch (err) {
+
+        setError(err);
+
+    }
+
+    finally {
+
+        setLoading(false);
+
+    }
+
+};
 
   useEffect(() => { load(); }, [id]);
 
@@ -40,6 +56,7 @@ function EventDetails() {
     try {
       // POST /api/events/:id/register
       await registrationApi.rsvpToEvent(id);
+      alert("Successfully Registered!");
       await load();
     } catch (err) {
       alert(err.response?.data?.message || 'Registration failed.');
@@ -96,7 +113,7 @@ function EventDetails() {
                 </Button>
               )}
               <Button variant="coral"
-                disabled={rsvping || event.isRegistered || event.status !== 'PUBLISHED'}
+                disabled={rsvping || event.isRegistered || event.status !== 'UPCOMING'}
                 onClick={handleRsvp}>
                 {event.isRegistered ? "You're registered" : rsvping ? 'Registering…' : `RSVP now — ${event.priceLabel}`}
               </Button>

@@ -80,7 +80,7 @@ function Participants() {
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
           <Button variant="secondary" icon={<UploadIcon />} onClick={handleExport}>Export CSV</Button>
-          <Button>Invite students</Button>
+          
         </div>
       </div>
 

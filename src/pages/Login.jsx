@@ -45,7 +45,7 @@ function Login() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, margin: '28px 0', color: 'var(--slate)', fontSize: 12.5 }}>
             <div style={{ flex: 1, height: 1, background: 'var(--hairline)' }} />OR<div style={{ flex: 1, height: 1, background: 'var(--hairline)' }} />
           </div>
-          <Button variant="secondary" style={{ width: '100%', justifyContent: 'center' }}>Continue with college SSO</Button>
+          
           <p style={{ textAlign: 'center', marginTop: 28, fontSize: 13.5, color: 'var(--slate)' }}>
             New here? <a style={{ color: 'var(--ink)', fontWeight: 600, cursor: 'pointer' }} onClick={() => navigate('/register')}>Create an account</a>
           </p>

@@ -50,7 +50,7 @@ function CreateEvent() {
       };
 
       const created = await eventApi.createEvent(payload);
-      navigate(`/events/${created.id || created.event?.id}`);
+      navigate(`/events/${created.id}`);
     } catch (err) {
       setError(err.response?.data?.message || 'Could not create the event.');
     } finally { setSubmitting(false); }

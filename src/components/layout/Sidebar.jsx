@@ -2,6 +2,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { DashboardIcon, EventsIcon, MyEventsIcon, ParticipantsIcon, ProfileIcon, SettingsIcon } from '../common/Icons';
 import useAuth from '../../hooks/useAuth';
 import { ORGANIZER_ROLES, ROLE_LABELS } from '../../utils/constants';
+import EventHubLogo from "../common/EventHubLogo";
 
 // each item optionally restricted to specific roles
 const NAV_ITEMS = [
@@ -31,7 +32,9 @@ const { user, logout } = useAuth();
 
   return (
     <aside className="app-sidebar">
-      <div className="brand"><span className="dot" />EventHub</div>
+      <div className="brand">
+  <EventHubLogo size={40} />
+</div>
 
       <nav>
         {visible.map(({ path, label, Icon }) => (

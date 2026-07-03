@@ -1,18 +1,13 @@
-import axiosInstance from '../services/axiosInstance';
+import axiosInstance from "../services/axiosInstance";
 
-// POST /api/events/:id/register
-export const rsvpToEvent = (eventId) =>
-  axiosInstance.post(`/events/${eventId}/register`).then((r) => r.data);
+// Register current user
+export const rsvpToEvent = async (eventId) => {
+  const res = await axiosInstance.post(`/events/${eventId}/register`);
+  return res.data.data;
+};
 
-// GET /api/events/:id/participants  (organizer/admin only)
-export const getParticipants = (eventId, params) =>
-  axiosInstance.get(`/events/${eventId}/participants`, { params }).then((r) => r.data);
-
-// Export participants as CSV — backend should support ?format=csv or a dedicated endpoint
-export const exportParticipantsCSV = (eventId) =>
-  axiosInstance
-    .get(`/events/${eventId}/participants`, {
-      params: { format: 'csv' },
-      responseType: 'blob',
-    })
-    .then((r) => r.data);
+// Get participants
+export const getParticipants = async (eventId) => {
+  const res = await axiosInstance.get(`/events/${eventId}/participants`);
+  return res.data.data;
+};

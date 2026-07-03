@@ -19,45 +19,108 @@ function EditEvent() {
   const [saving, setSaving]   = useState(false);
   const [error, setError]     = useState('');
 
-  useEffect(() => {
-    // GET /api/events/:id
-    eventApi.getEventById(id)
-      .then((raw) => {
-        const e = normalizeEvent(raw);
-        setEvent(e);
-        setForm({
-          title:       e.title,
-          description: e.description,
-          start_date:  e.startDate?.slice(0, 16) || '',
-          end_date:    e.endDate?.slice(0, 16)   || '',
-          venue:       e.venue,
-          max_participants: e.maxParticipants ?? '',
-          registration_deadline: e.registrationDeadline?.slice(0, 16) || '',
-        });
-      })
-      .catch(() => setError('Could not load this event.'))
-      .finally(() => setLoading(false));
-  }, [id]);
+useEffect(() => {
+
+    async function load() {
+
+        try {
+
+            setLoading(true);
+
+            const data = await eventApi.getEventById(id);
+
+            const e = normalizeEvent(data);
+
+            setEvent(e);
+
+            setForm({
+
+                title: e.title,
+
+                description: e.description,
+
+                venue: e.venue,
+
+                start_date: e.startDate
+                    ? e.startDate.substring(0,16)
+                    : "",
+
+                end_date: e.endDate
+                    ? e.endDate.substring(0,16)
+                    : "",
+
+                registration_deadline:
+                    e.registrationDeadline
+                    ? e.registrationDeadline.substring(0,16)
+                    : "",
+
+                max_participants:
+                    e.maxParticipants
+
+            });
+
+        }
+
+        catch{
+
+            setError("Unable to load event");
+
+        }
+
+        finally{
+
+            setLoading(false);
+
+        }
+
+    }
+
+    load();
+
+},[id]);
 
   const set = (key) => (e) => setForm({ ...form, [key]: e.target.value });
+const handleSave = async () => {
 
-  const handleSave = async () => {
-    setSaving(true); setError('');
     try {
-      // PUT /api/events/:id  — snake_case
-      await eventApi.updateEvent(id, {
-        title:                 form.title,
-        description:           form.description,
-        venue:                 form.venue,
-        start_date:            form.start_date || null,
-        end_date:              form.end_date   || null,
-        max_participants:      form.max_participants ? Number(form.max_participants) : null,
-        registration_deadline: form.registration_deadline || null,
-      });
-      navigate(`/events/${id}`);
-    } catch { setError('Could not save changes.'); }
-    finally { setSaving(false); }
-  };
+
+        setSaving(true);
+
+        await eventApi.updateEvent(id,{
+
+            title:form.title,
+
+            description:form.description,
+
+            venue:form.venue,
+
+            start_date:form.start_date,
+
+            end_date:form.end_date,
+
+            registration_deadline:form.registration_deadline,
+
+            max_participants:Number(form.max_participants)
+
+        });
+
+        navigate(`/events/${id}`);
+
+    }
+
+    catch{
+
+        setError("Unable to save event");
+
+    }
+
+    finally{
+
+        setSaving(false);
+
+    }
+
+};
 
   const handleCancelEvent = async () => {
     if (!window.confirm("Cancel this event? All registered students will be notified.")) return;

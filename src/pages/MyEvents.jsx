@@ -17,26 +17,51 @@ function MyEvents() {
   const [events, setEvents]   = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState(null);
+useEffect(() => {
 
-  useEffect(() => {
-    setLoading(true); setError(null);
-    // GET /api/events?mine=true  (backend should filter by created_by = current user)
-    eventApi.getMyEvents()
-      .then((data) => {
-        const list = Array.isArray(data) ? data : (data.events || []);
-        setEvents(list.map((e, i) => normalizeEvent(e, i)));
-      })
-      .catch((err) => setError(err))
-      .finally(() => setLoading(false));
-  }, []);
+    async function load() {
+
+        try {
+
+            setLoading(true);
+
+            const events = await eventApi.getMyEvents();
+
+            setEvents(events.map(normalizeEvent));
+
+        } catch (err) {
+
+            console.log(err);
+
+            setError(err);
+
+        } finally {
+
+            setLoading(false);
+
+        }
+
+    }
+
+    load();
+
+}, []);
 
   const now = new Date();
-  const filtered = events.filter((e) => {
-    if (tab === 1) return ['PUBLISHED', 'PENDING'].includes(e.status) && (!e.endDate || new Date(e.endDate) >= now);
-    if (tab === 2) return e.status === 'DRAFT';
-    if (tab === 3) return e.endDate && new Date(e.endDate) < now;
+  const filtered = events.filter((event) => {
+
+    if (tab === 1)
+        return event.status === "UPCOMING";
+
+    if (tab === 2)
+        return event.status === "DRAFT";
+
+    if (tab === 3)
+        return new Date(event.endDate) < new Date();
+
     return true;
-  });
+
+});
 
   return (
     <DashboardLayout placeholder="Search your events…">
@@ -76,14 +101,22 @@ function MyEvents() {
                   <td style={{ fontFamily: 'var(--font-mono)', color: 'var(--slate)' }}>
                     {e.isPaid ? `₹${e.revenue ?? 0}` : 'Free'}
                   </td>
-                  <td style={{ textAlign: 'right' }}>
-                    <a
-                      style={{ color: e.status === 'CANCELLED' ? 'var(--slate)' : 'var(--indigo)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
-                      onClick={() => navigate(e.status === 'DRAFT' ? `/edit-event/${e.id}` : `/participants?eventId=${e.id}`)}
-                    >
-                      {e.status === 'DRAFT' ? 'Edit →' : e.status === 'CANCELLED' ? 'View →' : 'Manage →'}
-                    </a>
-                  </td>
+                  <td style={{ textAlign: "right" }}>
+  <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
+    <Button
+      variant="secondary"
+      onClick={() => navigate(`/edit-event/${e.id}`)}
+    >
+      Edit
+    </Button>
+
+    <Button
+      onClick={() => navigate(`/participants?eventId=${e.id}`)}
+    >
+      Participants
+    </Button>
+  </div>
+</td>
                 </tr>
               ))}
             </tbody>

@@ -9,6 +9,7 @@ import * as eventApi from '../api/eventApi';
 import useAuth from '../hooks/useAuth';
 import { ORGANIZER_ROLES } from '../utils/constants';
 import { normalizeEvent, formatDate } from '../utils/helpers';
+import * as registrationApi from "../api/registrationApi";
 
 function Dashboard() {
   const navigate    = useNavigate();
@@ -19,12 +20,47 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    eventApi.getEvents({ limit: 4, sort: 'start_date' })
-      .then((data) => setEvents((Array.isArray(data) ? data : data.events || []).map(normalizeEvent)))
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, []);
+  const loadDashboard = async () => {
+    try {
+      setLoading(true);
 
+      const data = await eventApi.getEvents({
+        limit: 4,
+        sort: "start_date",
+      });
+
+      const list = Array.isArray(data)
+        ? data
+        : data.events || [];
+
+      const normalizedEvents = await Promise.all(
+        list.map(async (event) => {
+          const normalized = normalizeEvent(event);
+
+          try {
+            const participants = await registrationApi.getParticipants(
+              normalized.id
+            );
+
+            normalized.registrationCount = participants.length;
+          } catch (err) {
+            normalized.registrationCount = 0;
+          }
+
+          return normalized;
+        })
+      );
+
+      setEvents(normalizedEvents);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  loadDashboard();
+}, []);
   const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
   return (
