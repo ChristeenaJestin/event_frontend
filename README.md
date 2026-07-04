@@ -6,10 +6,8 @@ A modern Event Management System frontend built with **React.js** that enables s
 
 ## 🌐 Live Demo
 
-Frontend: https://your-vercel-url.vercel.app
+Frontend: https://event-frontend-gray-zeta.vercel.app/
 
-Backend API:
-http://your-aws-ip:5000
 
 ---
 
@@ -106,7 +104,7 @@ npm install
 Create a `.env`
 
 ```env
-VITE_API_URL=http://localhost:5000/api
+VITE_API_URL=/api
 ```
 
 Run
@@ -138,7 +136,7 @@ VITE_API_URL=
 Example
 
 ```
-VITE_API_URL=http://localhost:5000/api
+VITE_API_URL=/api
 ```
 
 ---
