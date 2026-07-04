@@ -5,16 +5,20 @@ import Button from '../components/common/Button';
 import useAuth from '../hooks/useAuth';
 
 function Login() {
-  const navigate     = useNavigate();
-  const { login }    = useAuth();
-  const [error, setError]         = useState('');
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  
+  // 1. State for role selection, defaulting to 'user'
+  const [selectedRole, setSelectedRole] = useState('user');
 
   const handleSubmit = async ({ email, password }) => {
     setError('');
     setSubmitting(true);
     try {
-      await login({ email, password });
+      // 2. Pass the selectedRole into the login payload
+      await login({ email, password, role: selectedRole });
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid email or password.');
@@ -25,7 +29,6 @@ function Login() {
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: '100vh' }}>
-      {/* left: form */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 60, background: 'var(--bg)' }}>
         <div style={{ width: '100%', maxWidth: 380 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 20, marginBottom: 44, color: 'var(--ink)' }}>
@@ -42,6 +45,26 @@ function Login() {
 
           <LoginForm onSubmit={handleSubmit} submitting={submitting} />
 
+          {/* 3. Minimalist Role Selector UI */}
+          <div style={{ display: 'flex', gap: 16, marginTop: 24, marginBottom: 8, fontSize: 12, fontWeight: 500 }}>
+            {['user', 'organiser', 'admin', 'superadmin'].map((role) => (
+              <span
+                key={role}
+                onClick={() => setSelectedRole(role)}
+                style={{
+                  cursor: 'pointer',
+                  textTransform: 'capitalize',
+                  color: selectedRole === role ? 'var(--indigo)' : 'var(--slate)',
+                  borderBottom: selectedRole === role ? '2px solid var(--indigo)' : '2px solid transparent',
+                  paddingBottom: 4,
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                {role === 'organiser' ? 'Organizer' : role}
+              </span>
+            ))}
+          </div>
+
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, margin: '28px 0', color: 'var(--slate)', fontSize: 12.5 }}>
             <div style={{ flex: 1, height: 1, background: 'var(--hairline)' }} />OR<div style={{ flex: 1, height: 1, background: 'var(--hairline)' }} />
           </div>
@@ -52,7 +75,6 @@ function Login() {
         </div>
       </div>
 
-      {/* right: quote panel */}
       <div style={{ background: 'var(--indigo)', color: '#fff', display: 'flex', alignItems: 'center', padding: 60 }}>
         <div>
           <div className="eyebrow" style={{ color: '#C7CCFF' }}>Used by students across campus</div>
