@@ -15,6 +15,9 @@ import EditEvent    from './pages/EditEvent';
 import MyEvents     from './pages/MyEvents';
 import Participants from './pages/Participants';
 import NotFound     from './pages/NotFound';
+import Privacy from './pages/Privacy';
+import Guidelines from './pages/Guidelines';
+import Help from './pages/Help';
 
 function App() {
   return (
@@ -25,6 +28,9 @@ function App() {
           <Route path="/"         element={<Home />} />
           <Route path="/login"    element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/privacy" element={<Privacy />} />
+<Route path="/guidelines" element={<Guidelines />} />
+<Route path="/help" element={<Help />} />
 
           {/* any authenticated user */}
           <Route element={<ProtectedRoutes />}>
