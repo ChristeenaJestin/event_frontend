@@ -1,8 +1,20 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
 function Footer() {
+  const navigate = useNavigate();
+
   return (
-    <footer style={{ padding: '44px 64px', display: 'flex', justifyContent: 'space-between', color: 'var(--slate)', fontSize: 13 }}>
-      <div>© 2026 EventHub, built for our campus community.</div>
-      <div style={{ display: 'flex', gap: 28 }}><a>Privacy</a><a>Guidelines</a><a>Help</a></div>
+    <footer style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '40px 64px', borderTop: '1px solid var(--hairline)', background: 'var(--surface)' }}>
+      <div style={{ fontSize: 13, color: 'var(--slate)' }}>
+        © 2026 EventHub, built for our campus community.
+      </div>
+      <div style={{ display: 'flex', gap: 24, fontSize: 13, color: 'var(--slate)', fontWeight: 500 }}>
+        {/* Added route navigations with mouse pointers while preserving your native layout styling */}
+        <a style={{ cursor: 'pointer' }} onClick={() => navigate('/privacy')}>Privacy</a>
+        <a style={{ cursor: 'pointer' }} onClick={() => navigate('/guidelines')}>Guidelines</a>
+        <a style={{ cursor: 'pointer' }} onClick={() => navigate('/help')}>Help</a>
+      </div>
     </footer>
   );
 }
